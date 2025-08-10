@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 export default function LoginPage(){
   const [error, setError] = useState<string|undefined>()
+  const [isRegister, setIsRegister] = useState(false)
   const router = useRouter()
   return (
     <main className="relative min-h-screen overflow-hidden">
@@ -38,10 +39,35 @@ export default function LoginPage(){
               const formData = new FormData(form)
               const email = String(formData.get('email')||'')
               const password = String(formData.get('password')||'')
-              const res = await signIn('credentials', { email, password, redirect: false })
-              if ((res as any)?.error) setError('Credenciales inválidas')
-              else router.replace('/')
+               if (isRegister){
+                 setError(undefined)
+                 const name = String(formData.get('name')||'') || undefined
+                 const r = await fetch('/api/auth/register', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, password, name }) })
+                 if (!r.ok){
+                   const data = await r.json().catch(()=>({}))
+                   setError(data?.code === 'EMAIL_TAKEN' ? 'Email en uso' : 'No se pudo registrar')
+                   return
+                 }
+                 const res = await signIn('credentials', { email, password, redirect: false })
+                 if ((res as any)?.error) setError('Cuenta creada, pero no se pudo iniciar sesión')
+                 else router.replace('/')
+               } else {
+                 const res = await signIn('credentials', { email, password, redirect: false })
+                 if ((res as any)?.error) setError('Credenciales inválidas')
+                 else router.replace('/')
+               }
             }}>
+              {isRegister && (
+                <label className="block">
+                  <span className="block text-sm mb-1">Nombre</span>
+                  <input
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    className="w-full h-14 md:h-12 rounded-xl bg-black/20 md:bg-black/20 border border-white/15 px-4 outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  />
+                </label>
+              )}
               <label className="block">
                 <span className="block text-sm mb-1">Email</span>
                 <input
@@ -68,14 +94,16 @@ export default function LoginPage(){
               <button
                 className="w-full h-14 md:h-12 rounded-xl bg-primary text-black font-medium text-base md:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                Entrar
+                {isRegister ? 'Crear cuenta' : 'Entrar'}
               </button>
             </form>
 
             {/* Desktop subtle footer links */}
             <div className="hidden md:flex justify-between text-xs text-muted mt-4">
+              <button onClick={()=> setIsRegister(v=>!v)} className="hover:underline" type="button">
+                {isRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
+              </button>
               <a href="#" className="hover:underline">¿Olvidaste tu contraseña?</a>
-              <a href="#" className="hover:underline">Necesitas ayuda</a>
             </div>
           </div>
 

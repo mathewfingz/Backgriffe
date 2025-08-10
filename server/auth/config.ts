@@ -14,7 +14,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if(!email || !password) return null
         const user = await db.user.findUnique({ where: { email } })
         if (!user || !user.password) return null
-        const verify = await loadArgon2Verify()
+        const { verify } = await import('argon2')
         const ok = await verify(user.password, password)
         return ok ? { id: user.id, email: user.email, role: user.role } as any : null
       }
@@ -39,13 +39,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 })
 
 export const { GET, POST } = handlers
-
-async function loadArgon2Verify(): Promise<(hash: string, password: string) => Promise<boolean>> {
-  try {
-    const mod = await import('@node-rs/argon2')
-    return mod.verify
-  } catch {}
-  const mod2: any = await import('argon2')
-  return mod2.verify
-}
 
