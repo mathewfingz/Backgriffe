@@ -30,7 +30,7 @@ export default function LoginPage(){
           <div className="rounded-2xl border p-6 md:p-8 md:bg-white/5 md:backdrop-blur md:border-white/15 bg-transparent">
             <div className="mb-6 text-center md:text-left">
               <h1 className="text-3xl md:text-4xl font-display tracking-tight">Bienvenido</h1>
-              <p className="text-sm text-muted mt-1">Ingresa a tu cuenta para continuar</p>
+              <p className="text-sm text-muted mt-1">{isRegister ? 'Crea tu cuenta para continuar' : 'Ingresa a tu cuenta para continuar'}</p>
             </div>
 
             <form className="space-y-4" onSubmit={async (e)=>{
@@ -97,6 +97,14 @@ export default function LoginPage(){
                 {isRegister ? 'Crear cuenta' : 'Entrar'}
               </button>
             </form>
+
+            {/* Toggle visible en móvil y desktop */}
+            <div className="flex justify-between text-xs text-muted mt-4 md:hidden">
+              <button onClick={()=> setIsRegister(v=>!v)} className="hover:underline" type="button">
+                {isRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
+              </button>
+              <a href="#" className="hover:underline">¿Olvidaste tu contraseña?</a>
+            </div>
 
             {/* Desktop subtle footer links */}
             <div className="hidden md:flex justify-between text-xs text-muted mt-4">
