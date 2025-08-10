@@ -3,6 +3,7 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
     serverComponentsExternalPackages: ['argon2'],
+    allowedDevOrigins: ['http://localhost:3010', 'http://192.168.1.4:3010']
   },
   eslint: {
     ignoreDuringBuilds: false,
