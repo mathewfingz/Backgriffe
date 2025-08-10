@@ -9,8 +9,8 @@ export function useRoleRedirect(storeId?: string){
   useEffect(()=>{
     if(status!== 'authenticated') return
     const role = (session as any)?.role
-    if(role === 'ADMIN') router.replace('/admin')
-    else router.replace(storeId ? `/stores/${storeId}` : '/stores')
+    if(role === 'ADMIN') router.replace('/admin' as any)
+    else router.replace((storeId ? `/stores/${storeId}` : '/stores') as any)
   }, [status, session, router, storeId])
 }
 

@@ -1,2 +1,2 @@
-export { handlers as GET, handlers as POST } from '@/server/auth/config'
+export { GET, POST } from '@/server/auth/config'
 

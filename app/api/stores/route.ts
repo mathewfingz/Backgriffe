@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/server/db/client'
+import { listStores, createStore } from '@/server/services/stores'
 
 export async function GET(){
-  const items = await db.store.findMany({ orderBy: { createdAt: 'desc' }})
+  const items = await listStores()
   return NextResponse.json(items)
 }
 
 export async function POST(req: NextRequest){
-  const body = await req.json()
-  // Minimal validation; expanded Zod schemas would live in lib/schemas/store.ts
-  if (!body?.name || !body?.slug || !body?.ownerId) return NextResponse.json({ code: 'VAL_STORE', message: 'Missing fields' }, { status: 400 })
-  const created = await db.store.create({ data: { name: body.name, slug: body.slug, ownerId: body.ownerId }})
-  return NextResponse.json(created, { status: 201 })
+  try {
+    const body = await req.json()
+    const created = await createStore(body)
+    return NextResponse.json(created, { status: 201 })
+  } catch (err: any){
+    const status = err?.code === 'NOT_FOUND' ? 404 : 400
+    return NextResponse.json({ code: err?.code ?? 'VAL_STORE', message: err?.message ?? 'Invalid payload' }, { status })
+  }
 }
 

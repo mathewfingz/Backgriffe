@@ -2,7 +2,6 @@ import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import Credentials from 'next-auth/providers/credentials'
 import { db } from '@/server/db/client'
-import { verify } from 'argon2'
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db) as any,
@@ -10,11 +9,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       name: 'credentials',
-      credentials: { email: {}, password: {} },
+      credentials: { email: { label: 'email' }, password: { label: 'password' } },
       authorize: async (creds) => {
-        const user = await db.user.findUnique({ where: { email: creds?.email } })
+        const email = (creds as any)?.email as string | undefined
+        const password = (creds as any)?.password as string | undefined
+        if(!email || !password) return null
+        const user = await db.user.findUnique({ where: { email } })
         if (!user || !user.password) return null
-        const ok = await verify(user.password, String(creds?.password))
+        const { verify } = await import('argon2')
+        const ok = await verify(user.password, password)
         return ok ? { id: user.id, email: user.email, role: user.role } as any : null
       }
     })
@@ -36,4 +39,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: { signIn: '/login' },
   secret: process.env.NEXTAUTH_SECRET
 })
+
+export const { GET, POST } = handlers
 
