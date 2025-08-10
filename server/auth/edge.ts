@@ -11,7 +11,7 @@ export const { auth } = NextAuth({
       return session
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET,
 })
 
 

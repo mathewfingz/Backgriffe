@@ -37,7 +37,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     redirect: async ({ baseUrl, url }) => url.startsWith('/') ? `${baseUrl}${url}` : url
   },
   pages: { signIn: '/login' },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET
 })
 
 export const { GET, POST } = handlers
