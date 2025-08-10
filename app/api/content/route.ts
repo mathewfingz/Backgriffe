@@ -4,6 +4,7 @@ import { auth } from '@/server/auth/config'
 import { createContent, listContent } from '@/server/services/content'
 import { isStoreOwnerOrAdmin } from '@/lib/utils/authz'
 
+export const runtime = 'nodejs'
 export async function GET(req: NextRequest){
   const session = await auth()
   const storeId = req.nextUrl.searchParams.get('storeId') || undefined

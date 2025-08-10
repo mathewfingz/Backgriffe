@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { triggerAdmin, triggerStore } from '@/server/realtime/pusher'
 
+export const runtime = 'nodejs'
 export async function POST(req: NextRequest){
   const body = await req.json()
   const { channel, event, payload } = body || {}

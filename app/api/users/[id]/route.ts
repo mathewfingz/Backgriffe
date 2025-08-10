@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/server/db/client'
 
+export const runtime = 'nodejs'
 export async function PATCH(req: NextRequest, { params }: { params: { id: string }}){
   const id = params.id
   const body = await req.json()

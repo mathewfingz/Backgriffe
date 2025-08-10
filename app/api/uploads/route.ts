@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/server/db/client'
 import { triggerAdmin, triggerStore } from '@/server/realtime/pusher'
 
+export const runtime = 'nodejs'
 export async function GET(req: NextRequest){
   const storeId = req.nextUrl.searchParams.get('storeId')
   if(!storeId) return NextResponse.json({ code: 'VAL_UPLOADS', message: 'storeId required' }, { status: 400 })

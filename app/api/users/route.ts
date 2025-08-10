@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/server/db/client'
 
+export const runtime = 'nodejs'
 export async function GET(){
   const users = await db.user.findMany({ orderBy: { createdAt: 'desc' }})
   return NextResponse.json(users)

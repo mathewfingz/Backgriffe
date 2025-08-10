@@ -5,6 +5,7 @@ import { isStoreOwnerOrAdmin } from '@/lib/utils/authz'
 import { contentUpdateSchema } from '@/lib/schemas/content'
 import { triggerAdmin, triggerStore } from '@/server/realtime/pusher'
 
+export const runtime = 'nodejs'
 export async function PATCH(req: NextRequest, { params }: { params: { id: string }}){
   const id = params.id
   const body = await req.json()

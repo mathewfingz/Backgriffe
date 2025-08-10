@@ -3,6 +3,7 @@ import { db } from '@/server/db/client'
 import { auth } from '@/server/auth/config'
 import { isStoreOwnerOrAdmin } from '@/lib/utils/authz'
 
+export const runtime = 'nodejs'
 export async function PATCH(req: NextRequest, { params }: { params: { id: string }}){
   const id = params.id
   const session = await auth()

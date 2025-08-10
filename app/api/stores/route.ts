@@ -4,6 +4,7 @@ import { auth } from '@/server/auth/config'
 import { isAdmin } from '@/lib/utils/authz'
 import { rateLimit } from '@/lib/utils/rateLimit'
 
+export const runtime = 'nodejs'
 export async function GET(req: NextRequest){
   if (!rateLimit(req)) return NextResponse.json({ code: 'RATE_LIMITED', message: 'Too many requests' }, { status: 429 })
   const items = await listStores()
