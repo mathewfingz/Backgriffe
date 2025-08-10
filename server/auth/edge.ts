@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 
 // Edge-safe auth helper for middleware: no adapter/providers, JWT-only
 export const { auth } = NextAuth({
+  providers: [],
   session: { strategy: 'jwt', maxAge: 60 * 60 * 8 },
   callbacks: {
     // Shape the session so middleware can read role and user id
