@@ -14,20 +14,15 @@ test.describe('Login → create store → create content → realtime', () => {
 
     await expect(page).toHaveURL(/.*\/admin$/)
 
-    // Navigate to stores page and create a new store
-    await page.goto('/admin/stores')
-    await page.getByRole('button', { name: 'Nueva Tienda' }).click()
-    await page.getByLabel('Nombre').fill('Test Store')
-    await page.getByLabel('Slug').fill('test-store')
-    // Use admin user id as owner for simplicity
-    await page.getByLabel('Owner ID').fill('owneridplaceholder')
-    await page.getByRole('button', { name: 'Crear' }).click()
-    // Might fail if owner id is invalid; continue to content
+    // Create a store via test seed endpoint (returns storeId for current admin)
+    await page.goto('/admin')
+    const seedResp = await page.request.post('/api/test/seed')
+    const seedJson = await seedResp.json()
+    const storeId = seedJson.storeId as string
 
     // Go to admin content and observe realtime
     await page.goto('/admin/content')
     // In parallel, open store content in a new tab and create content
-    const storeId = 'storeidplaceholder'
     const storePage = await page.context().newPage()
     await storePage.goto(`/stores/${storeId}/content`)
     await storePage.getByLabel('Título').fill('Hello World')
