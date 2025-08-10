@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  role      Role     @default(STORE_OWNER)
+  stores    Store[]  @relation("StoreOwners")
+  memberStores Store[] @relation("StoreMembers")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Store {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  owner     User      @relation("StoreOwners", fields: [ownerId], references: [id])
+  ownerId   String
+  members   User[]    @relation("StoreMembers")
+  contents  Content[]
+  uploads   Upload[]
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Content {
+  id        String   @id @default(cuid())
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String
+  title     String
+  body      String?
+  kind      ContentKind @default(POST)
+  status    ContentStatus @default(DRAFT)
+  source    String
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Upload {
+  id        String   @id @default(cuid())
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String
+  fileKey   String
+  url       String
+  mime      String
+  size      Int
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  STORE_OWNER
+  STAFF
+}
+
+enum ContentKind {
+  POST
+  PRODUCT
+  MEDIA
+  NOTE
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}

@@ -1,0 +1,38 @@
+:root {
+  --radius: 14px;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* nova-works (admin) */
+[data-theme='nova-works']{
+  --bg: #0B1220;
+  --fg: #E6EEF8;
+  --muted: #96A3B5;
+  --primary: #7CD4FD;
+  --accent: #9BFFB7;
+}
+
+/* nova-haven (store) */
+[data-theme='nova-haven']{
+  --bg: #0E0F12;
+  --fg: #F5F7FB;
+  --muted: #9AA3AF;
+  --primary: #7C5CFF;
+  --accent: #FFB56B;
+}
+
+/* login desktop: pixel-verse */
+[data-theme='pixel-verse']{
+  --bg: #0A0A0A;
+  --fg: #F0F0F0;
+  --primary: #00E5FF;
+}
+
+/* login mobile: curry-landing */
+[data-theme='curry-landing']{
+  --bg: #111204;
+  --fg: #F9F6E8;
+  --primary: #F2C94C;
+}
+
