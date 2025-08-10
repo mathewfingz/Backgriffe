@@ -24,7 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     jwt: async ({ token, user }) => { if (user) (token as any).role = (user as any).role; return token },
-    session: async ({ session, token }) => { (session as any).role = (token as any).role; return session },
+    session: async ({ session, token }) => { (session as any).role = (token as any).role; (session as any).user = { ...(session as any).user, id: (token as any).sub }; return session },
     authorized: async ({ auth, request: { nextUrl } }) => {
       const role = (auth as any)?.user?.role
       const isAdmin = nextUrl.pathname.startsWith('/admin')
