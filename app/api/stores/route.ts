@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { listStores, createStore } from '@/server/services/stores'
+import { auth } from '@/server/auth/config'
+import { isAdmin } from '@/lib/utils/authz'
+import { rateLimit } from '@/lib/utils/rateLimit'
 
-export async function GET(){
+export async function GET(req: NextRequest){
+  if (!rateLimit(req)) return NextResponse.json({ code: 'RATE_LIMITED', message: 'Too many requests' }, { status: 429 })
   const items = await listStores()
   return NextResponse.json(items)
 }
 
 export async function POST(req: NextRequest){
+  const session = await auth()
+  if (!await isAdmin(session?.user)) return NextResponse.json({ code: 'FORBIDDEN', message: 'Admins only' }, { status: 403 })
   try {
     const body = await req.json()
     const created = await createStore(body)
